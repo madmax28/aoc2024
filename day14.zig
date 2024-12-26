@@ -78,17 +78,15 @@ pub fn main() !void {
 
     var map = std.AutoHashMap(struct { i64, i64 }, void).init(gpa);
     defer map.deinit();
-    var max: u64 = 0;
-    var p2: u64 = 0;
-    for (0..10000) |t| {
+    var t: i64 = 0;
+    while (true) : (t += 1) {
         for (robots.items) |*robot| {
             try map.put(.{ robot.px, robot.py }, {});
             robot.step();
         }
 
-        if (map.count() > max) {
-            max = map.count();
-            p2 = t;
+        if (map.count() == robots.items.len) {
+            std.debug.print("Part 2: {}\n", .{t});
             // for (0..H) |y| {
             //     for (0..W) |x| {
             //         if (map.contains(.{ @intCast(x), @intCast(y) })) {
@@ -99,9 +97,9 @@ pub fn main() !void {
             //     }
             //     std.debug.print("\n", .{});
             // }
+            break;
         }
 
         map.clearRetainingCapacity();
     }
-    std.debug.print("Part 2: {}\n", .{p2});
 }
